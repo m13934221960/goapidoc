@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Geekdocs</title>
+    <link>http://localhost/posts/</link>
+    <description>Recent content in Posts on Geekdocs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 06 Mar 2021 00:33:21 +0800</lastBuildDate><atom:link href="http://localhost/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Chapter01</title>
+      <link>http://localhost/posts/chapter01/</link>
+      <pubDate>Sat, 06 Mar 2021 00:33:21 +0800</pubDate>
+      
+      <guid>http://localhost/posts/chapter01/</guid>
+      <description>1 输入输出Input/Output    1.1 io包 - 基本的IO接口    io 包为 I/O 原语提供了基本的接口。它主要包装了这些原语的已有实现。
+由于这些被接口包装的I/O原语是由不同的低级操作实现，因此，在另有声明之前不该假定它们的并发执行是安全的。
+io包中大部分是接口定义，其中io.Reader和io.Writer最为关键。在Go语言中，文件、套接字等一切输入设备抽象，都会实现io.Reader接口，而一切输出设备抽象，都会实现io.Writer接口。
+io.Reader的定义详见Reader接口。
+io.Reader文档描述中有一个要点，就是n可能小于等于len(p)，也就是说Go在读IO的时候，是不会保证一次读取预期的所有数据的。
+如果我们要确保一次读取我们所需的所有数据，就需要在一个循环里调用Read，累加每次返回的n并小心设置下次Read时p的偏移量，直到n的累加值达到我们的预期。
+因为上述需求实在太常见了，所以Go在io包中提供了一个ReadFull函数来做到一次读取要求的所有数据，通过阅读ReadFull函数的代码，也可以反过来帮助大家理解io.Reader是怎么运作的。
+我们稍微跳跃一下，看一下net包中的Conn接口，net.Conn接口的第一个方法就是Read，方法签名跟io.Reader接口要求的一样。
+要做好Go语言的网络编程，在理解net.Conn之前，先得理解io.Reader，否则该用io.ReadFull的地方没有用，就可能出现奇怪的协议解析错误，并且很难排查。
+这就是我说io.Reader很重要的原因。
+接着我们再看io.Writer接口：
+type Writer interface { Write(p []byte) (n int, err error) } 文档中最关键的信息是：如果n小于len(p)，err必须不为nil。
+也就是说io.Writer在每次写数据时，要保证数据的完整写入，这个特性跟io.Reader正好是相反的。
+基于io.Writer的这一特性，我们可以推断，当我们往一个net.Conn写入数据时（是的，它当然也实现了这个接口），调用会阻塞直到数据完整写完或者发生IO错误，这甚至不需要我们阅读任何Go的底层代码就可以做出这个判断，如果你去阅读net包和runtime包的底层代码，可以进一步确认这个事实。
+基于这个事实，我们在设计网络应用或其它IO应用的时候就要小心我们的应用场景中IO阻塞是否是可接受的，如果IO阻塞会影响到业务处理，那我们就需要想办法让IO变成异步行为。
+Go语言中要让一个事情变成异步很简单，举个例子：
+type Session struct { conn net.Conn sendChan chan []byte } func NewSession(conn net.Conn, sendChanSize int) *Session { ​ s := &amp;amp;Session{ ​ conn: conn, ​ sendChan: make(chan []byte, sendChanSize), ​ } ​ go s.</description>
+    </item>
+    
+  </channel>
+</rss>
