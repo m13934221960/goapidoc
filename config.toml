@@ -1,5 +1,5 @@
-baseURL = "http://localhost"
-title = "Geekdocs"
+baseURL = "https://m13934221960.github.io/goapidoc/"
+title = "goapidoc"
 theme = "hugo-geekdoc"
 
 pluralizeListTitles = false
